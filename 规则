@@ -1,0 +1,28 @@
+- name: block google
+  action: block
+  expr: string(tls?.req?.sni) endsWith "google.com"
+
+- name: block youtube
+  action: block
+  expr: string(tls?.req?.sni) endsWith "youtube.com"
+
+- name: block telegram
+  action: block
+  expr: string(tls?.req?.sni) contains "telegram"
+
+- name: block shadowsocks
+  action: block
+  expr: fet != nil && fet.yes
+
+- name: block trojan
+  action: block
+  expr: trojan != nil && trojan.yes
+
+- name: block wireguard
+  action: drop
+  expr: wireguard?.handshake_response?.receiver_index_matched == true
+
+- name: block openvpn
+  action: block
+  expr: openvpn != nil &&
+        openvpn.rx_pkt_cnt + openvpn.tx_pkt_cnt > 50
